@@ -1,22 +1,29 @@
-terraform {
-  required_providers {
-    null = {
-      source = "hashicorp/null"
-      version = "3.2.1"
+data "tfe_outputs" "foo" {
+  organization = "petya-business-org"
+  workspace = "count-null-provider10"
+}
+
+output "test" {
+value = data.tfe_outputs.foo.values
+sensitive = true
+}
+
+data "terraform_remote_state" "test" {
+  backend = "remote"
+
+  config = {
+    organization = "Petya-business-org"
+    workspaces = {
+      name = "count-null-provider10"
     }
   }
 }
 
-
-resource "null_resource" "screen_output" {
-count = 3
-  provisioner "local-exec" {
-    command = <<EOT
-    echo 'Hello'
-    EOT
-  }
+output "test2" { 
+value = data.terraform_remote_state.test.outputs.IDserver2
 }
 
-output "IDserver2" {
-  value = "${null_resource.screen_output[2].id}"
+output "test3" {
+value = data.tfe_outputs.foo.values.IDserver2
+sensitive = true
 }
