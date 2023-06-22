@@ -27,3 +27,11 @@ output "test3" {
 value = data.tfe_outputs.foo.values.IDserver2
 sensitive = true
 }
+
+resource "null_resource" "screen_output" {
+  provisioner "local-exec" {
+    command = <<EOT
+    echo 'Hello'
+    EOT
+  }
+}
